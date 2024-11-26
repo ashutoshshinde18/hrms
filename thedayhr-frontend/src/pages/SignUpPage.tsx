@@ -64,20 +64,40 @@ import {
     };
   
     const handleSubmit = async (e: FormEvent) => {
-      e.preventDefault();
-      if (!validateForm()) return;
-      setIsLoading(true);
-      setError("");
-      try {
-        // Simulated API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        // Handle successful signup here
-      } catch (err) {
-        setError("Signup failed. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        e.preventDefault();
+        if (!validateForm()) return;
+        setIsLoading(true);
+        setError("");
+      
+        try {
+          const response = await fetch('http://localhost:8000/user-management/api/signup/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: formData.fullName,
+              email: formData.email,
+              password: formData.password,
+            }),
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            alert('Signup successful! Check your email to verify your account.');
+          } else {
+            console.log(data)
+            console.log(data.error)
+            setError(data.error || 'Signup failed. Please try again.');
+          }
+        } catch (err) {
+          setError('Signup failed. Please try again.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
   
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;

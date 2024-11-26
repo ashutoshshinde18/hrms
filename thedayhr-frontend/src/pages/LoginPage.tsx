@@ -1,6 +1,7 @@
 import { Loader2, Mail, Lock, LogIn, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserContext } from "./UserContext";
 
 interface TouchedState {
   email: boolean;
@@ -8,6 +9,12 @@ interface TouchedState {
 }
 
 export default function LoginPage() {
+  const GOOGLE_CLIENT_ID = "684766656106-fpdkiiher50v298o2bl609pipc81oqrg.apps.googleusercontent.com"
+  const REDIRECT_URI = "http://localhost:8000/user-management/api/auth/google/callback"
+  const SCOPE = "profile email";
+  const RESPONSE_TYPE = "code";
+  const navigate = useNavigate();
+  const { setUserData } = useUserContext();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,6 +24,10 @@ export default function LoginPage() {
     password: false,
   });
 
+  const initiateGoogleLogin = () => {
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=${RESPONSE_TYPE}&access_type=online`;
+    window.location.href = googleAuthUrl
+  }
   // Validate email format
   const validateEmail = (email: string): boolean => {
     return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) !== null;
@@ -37,9 +48,26 @@ export default function LoginPage() {
     setIsLoading(true);
     setError("");
     try {
-      // Simulated API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // Handle successful login here
+      // Make an API call to the Django login endpoint
+    const response = await fetch("http://localhost:8000/user-management/api/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    // console.log('data: ',data)
+    if (response.ok) {
+      // Successful login - redirect to dashboard or desired page
+      // Store user data in sessionStorage and update context
+      setUserData(data.useremail, data.message);
+      navigate("/dashboard");
+    } else {
+      // Handle API errors
+      setError(data.error || "Login failed. Please try again.");
+    }
     } catch (err) {
       setError("Login failed. Please try again.");
     } finally {
@@ -178,6 +206,7 @@ export default function LoginPage() {
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
               type="button"
+              onClick={initiateGoogleLogin}
               className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <img

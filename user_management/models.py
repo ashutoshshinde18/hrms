@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 import uuid
+from django.conf import settings
+from django.core.mail import send_mail
 
 ROLE_CHOICES = [
     ('Admin', 'Admin'),
@@ -91,6 +93,16 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+    def send_verification_email(self):
+        verification_url = f"{settings.FRONTEND_URL}/verify-email/{self.email_verification_code}/"
+        send_mail(
+            'Verify your email address',
+            f'Click the link to verify your email: {verification_url}',
+            settings.DEFAULT_FROM_EMAIL,
+            [self.email],
+            fail_silently=False,
+        )
 
 
 class OAuth2Token(models.Model):
