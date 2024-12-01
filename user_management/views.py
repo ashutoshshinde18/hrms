@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import CustomUser
@@ -9,6 +10,8 @@ from django.contrib.auth import authenticate, get_user_model
 from django.shortcuts import redirect
 import uuid
 import requests
+import logging
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -40,7 +43,9 @@ class VerifyEmailView(APIView):
                 return Response({"message": "Your email is already verified."}, status=status.HTTP_200_OK)
             
             user.is_active = True
-            user.verification_code = None  # Clear verification code after activation
+            user.is_email_verified = True
+            user.email_verification_code = verification_code  # Clear verification code after activation
+
             user.save()
             return Response({"message": "Email verification successful!"}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
@@ -58,10 +63,12 @@ class LoginAPIView(APIView):
 
         if user:
             if user.is_active:
-                # Return a successful login response along with the user email
+                refresh = RefreshToken.for_user(user)
                 return Response({
-                    "message": "Login successful.",
-                    "useremail": user.email
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                    "useremail": user.email,
+                    "message": "Login successful."
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Account is inactive. Please verify your email."}, status=status.HTTP_400_BAD_REQUEST)
@@ -87,20 +94,20 @@ class GoogleAuthCallbackAPIView(APIView):
         # Exchange authorization code for access token
         token_response = requests.post(token_url, data=token_data, headers=token_headers)
         token_response_data = token_response.json()
-        print('token response data: ',token_response_data)
+        logger.info(f'token response data: {token_response_data}')
 
         if "error" in token_response_data:
             return Response({"error": token_response_data.get("error")}, status=status.HTTP_400_BAD_REQUEST)
 
         access_token = token_response_data.get("access_token")
-        print('access token: ',access_token)
+        logger.info(f'access token: {access_token}')
 
         # Retrieve user information from Google
         user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
         user_info_params = {"alt": "json", "access_token": access_token}
         user_info_response = requests.get(user_info_url, params=user_info_params)
         user_data = user_info_response.json()
-        print('user data: ',user_data)
+        logger.info(f'user data: {user_data}')
 
         user_email = user_data.get("email")
         user_name = user_data.get("name")
@@ -110,11 +117,14 @@ class GoogleAuthCallbackAPIView(APIView):
 
         # Check if user exists, if not, create a new user
         user, created = User.objects.get_or_create(email=user_email, defaults={"email": user_email, "is_active": True})
-        print('user: ',user)
 
         if created:
             user.set_unusable_password()  # Prevent logging in with a password
             user.save()
+        
+        refresh = RefreshToken.for_user(user)
+        access = str(refresh.access_token)
+        refresh = str(access)
 
         # # Optionally, generate a session or JWT token for the user
         # return Response(
@@ -125,4 +135,4 @@ class GoogleAuthCallbackAPIView(APIView):
         #     },
         #     status=status.HTTP_200_OK,
         # )
-        return redirect(f"http://localhost:3000/dashboard")
+        return redirect(f"http://localhost:3000?access={access}&refresh={refresh}")

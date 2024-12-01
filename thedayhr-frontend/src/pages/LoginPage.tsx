@@ -25,7 +25,9 @@ export default function LoginPage() {
   });
 
   const initiateGoogleLogin = () => {
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=${RESPONSE_TYPE}&access_type=online`;
+    console.log('in')
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=${RESPONSE_TYPE}&access_type=online&prompt=consent`;
+    console.log(googleAuthUrl)
     window.location.href = googleAuthUrl
   }
   // Validate email format
@@ -60,10 +62,10 @@ export default function LoginPage() {
     const data = await response.json();
     // console.log('data: ',data)
     if (response.ok) {
-      // Successful login - redirect to dashboard or desired page
-      // Store user data in sessionStorage and update context
+      sessionStorage.setItem("accessToken", data.access)
+      sessionStorage.setItem("refreshToken", data.refresh)
       setUserData(data.useremail, data.message);
-      navigate("/dashboard");
+      navigate("/");
     } else {
       // Handle API errors
       setError(data.error || "Login failed. Please try again.");

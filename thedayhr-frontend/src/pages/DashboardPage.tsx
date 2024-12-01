@@ -1,8 +1,32 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useUserContext } from "./UserContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { email, message, logout } = useUserContext();
+
+  useEffect(() => {
+    // Parse query parameters
+    const params = new URLSearchParams(location.search);
+    const accessToken = params.get("access");
+    const refreshToken = params.get("refresh");
+    if (accessToken && refreshToken) {
+      // Store tokens in sessionStorage
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("refreshToken", refreshToken);
+
+      // Remove tokens from the URL
+      navigate("/", { replace: true });
+    } else {
+      // Fetch user data with existing token or redirect to login
+      const storedAccessToken = sessionStorage.getItem("accessToken");
+      if (!storedAccessToken) {
+        navigate("/login");
+      }
+    }
+  }, [location, navigate]);
 
   return (
     <main className="min-h-screen w-full bg-gray-50 flex items-center justify-center p-4">

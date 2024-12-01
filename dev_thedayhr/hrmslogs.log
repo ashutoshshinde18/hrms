@@ -1,0 +1,127 @@
+token response data: {'access_token': 'ya29.a0AeDClZANvG9OQEDvPzvmGTXuRBT6V_M4Tu2Q0Xa7siBCP6xZ-AgBzMyXRBpkkAbnxAl2S3mFAObCLZzQ_1xAXjfBMeDglX5M-39CTf9G2SOGawEi7Bb3JKs_WKTDs2css552xFqrP-3hY_QdwMpj9BwXf3e46bGao5POg4nkaCgYKAeYSARESFQHGX2MiqIKDvUc6Du9v2eEl5ZLaqQ0175', 'expires_in': 3599, 'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid', 'token_type': 'Bearer', 'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE2Nzc1Mzk1NTAxMzQyMTI3OTMiLCJlbWFpbCI6ImFzaHV0b3Noc2hpbmRlNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJabVQ4YXBZMmJOM1RvVVJuZGZLWTdRIiwibmFtZSI6IkFzaHV0b3NoIFNoaW5kZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKVGRCc0dBRDJWVWNBSmFFU2xkc3ZVVS1ZVzV6WnkyN2hmZnhRSlgtSUdMQ2NteDEtcz1zOTYtYyIsImdpdmVuX25hbWUiOiJBc2h1dG9zaCIsImZhbWlseV9uYW1lIjoiU2hpbmRlIiwiaWF0IjoxNzMyNzA5MzE2LCJleHAiOjE3MzI3MTI5MTZ9.kVIDucHs8GPKuLEtbyXJvZHh2YoWBsYwuvWXG38yGP8H4WhE572PSxeio2KAmt94B2jv-oZISx2E-tLB66SCk7FZ-ByUd7kiChRJVSNQQtxTcWgriYTm4wN6r9u774A1JOlLYUhhsRtJQ1piOF6AHCE3huGoEnwt27bFVhQp46E2Xcgg8qBA1kFvLL9nr5sVJEqxxl_2pOh1T3BdvwWAm_ZNzfTFLNNZ6Jk9B8dJLFksP4qu7_clOuYJLawhOgdnrC8ezRgR02fCA2hu0Wv2Zw_lwfGXfT0k5Ql-I8HVZNsaL9UiblvruV5tdFbjR2nZh61Jzq_WVeIVdeqYJhudGQ'}
+access token: ya29.a0AeDClZANvG9OQEDvPzvmGTXuRBT6V_M4Tu2Q0Xa7siBCP6xZ-AgBzMyXRBpkkAbnxAl2S3mFAObCLZzQ_1xAXjfBMeDglX5M-39CTf9G2SOGawEi7Bb3JKs_WKTDs2css552xFqrP-3hY_QdwMpj9BwXf3e46bGao5POg4nkaCgYKAeYSARESFQHGX2MiqIKDvUc6Du9v2eEl5ZLaqQ0175
+user data: {'id': '111677539550134212793', 'email': 'ashutoshshinde67@gmail.com', 'verified_email': True, 'name': 'Ashutosh Shinde', 'given_name': 'Ashutosh', 'family_name': 'Shinde', 'picture': 'https://lh3.googleusercontent.com/a/ACg8ocJTdBsGAD2VUcAJaESldsvUU-YW5zZy27hffxQJX-IGLCcmx1-s=s96-c'}
+"GET /user-management/api/auth/google/callback?code=4%2F0AeanS0Y9uzQRAYmk6UwdBND-2vkbG7jiyqZ9UuWwSZ9MZ9rjQjuwRSiUrJJYh0Pf-YgmSA&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent HTTP/1.1" 302 0
+token response data: {'access_token': 'ya29.a0AeDClZBvHxU_sYRwvrho7Js19doujDZgKwECm0fbN5qSga3VdFEuGlSQLFLlH0ROh_RSuvM9eWgvyDFhF0Xp0rUF5d7OwGSGWbKpG3pT5fbzBI67S--L9fzY7rJhT7HuzmUVlQhsBIrhAAOXk3nL9j2kRuh2hUvIchwR1JVYaCgYKARUSARESFQHGX2Mi2fgufVTdwqq6waWiiIr1xA0175', 'expires_in': 3599, 'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid', 'token_type': 'Bearer', 'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE2Nzc1Mzk1NTAxMzQyMTI3OTMiLCJlbWFpbCI6ImFzaHV0b3Noc2hpbmRlNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJmREgySnNxUExnSExGMzdZQkxXeG53IiwibmFtZSI6IkFzaHV0b3NoIFNoaW5kZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKVGRCc0dBRDJWVWNBSmFFU2xkc3ZVVS1ZVzV6WnkyN2hmZnhRSlgtSUdMQ2NteDEtcz1zOTYtYyIsImdpdmVuX25hbWUiOiJBc2h1dG9zaCIsImZhbWlseV9uYW1lIjoiU2hpbmRlIiwiaWF0IjoxNzMyNzA5MzcxLCJleHAiOjE3MzI3MTI5NzF9.uOU157jJz_m_EmSU1Wg-uRr-H3sbBVXz9QiHq2_VzXIc5YnLxY6QmNH86D5HsKlH199FSXfVfmrTlanvwU7WDTF2_pJk70BIJ3wFdF52m0pknv_yJ8efmS4GvjjfYsKJoJam_saMFLhawRf9nhNCwdU1jRhIs0H3XNpDl_Sjw0NulhTy4TDUwqLVkqWAeaB4t-9UMM4g97blMfX7dGniYGpuTsbegPq6VHWlchyX6U0PGfmezTsniQWQKi0OC3GVUYWM9hbRiYZqA1SDSiSmuJfEe8WgCPnUUx-vwT49D9se0nQkCkf_ZFe5wg60AHGragJMZqBt3N_6vChPnjY89Q'}
+access token: ya29.a0AeDClZBvHxU_sYRwvrho7Js19doujDZgKwECm0fbN5qSga3VdFEuGlSQLFLlH0ROh_RSuvM9eWgvyDFhF0Xp0rUF5d7OwGSGWbKpG3pT5fbzBI67S--L9fzY7rJhT7HuzmUVlQhsBIrhAAOXk3nL9j2kRuh2hUvIchwR1JVYaCgYKARUSARESFQHGX2Mi2fgufVTdwqq6waWiiIr1xA0175
+user data: {'id': '111677539550134212793', 'email': 'ashutoshshinde67@gmail.com', 'verified_email': True, 'name': 'Ashutosh Shinde', 'given_name': 'Ashutosh', 'family_name': 'Shinde', 'picture': 'https://lh3.googleusercontent.com/a/ACg8ocJTdBsGAD2VUcAJaESldsvUU-YW5zZy27hffxQJX-IGLCcmx1-s=s96-c'}
+"GET /user-management/api/auth/google/callback?code=4%2F0AeanS0Z5ZtSvPQKd_9sq5bAd3a7JKjuqOiaPqgLwuURaryEWzX--wAwmz3911v5IqBtbpQ&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent HTTP/1.1" 302 0
+Watching for file changes with StatReloader
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Watching for file changes with StatReloader
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+Unauthorized: /user-management/api/login/
+"POST /user-management/api/login/ HTTP/1.1" 401 38
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Watching for file changes with StatReloader
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Watching for file changes with StatReloader
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+"OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+Not Found: /api/token/refresh/
+Not Found: /api/token/refresh/
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /api/token/refresh/ HTTP/1.1" 404 2395
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+token response data: {'access_token': 'ya29.a0AeDClZAOWjjMy-d1KquRCw6JqegXVQU_LHaWXjKXZTDQVY_cssXh8yy48iHwviwHxnytXjH1KP2xu4ABjqfDDRO52QaWyKo6MJcPT8QnKFnev7gWLUttHrVsfq-OzGZr2m4JamvO4lV0X911_E2v6yvc54hAPWbwDQ41Sgy6aCgYKAUwSARESFQHGX2MiTW07_IPdejOu7tE_4pqiUg0175', 'expires_in': 3599, 'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid', 'token_type': 'Bearer', 'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE2Nzc1Mzk1NTAxMzQyMTI3OTMiLCJlbWFpbCI6ImFzaHV0b3Noc2hpbmRlNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJQckdyM3dfcTRYYTVONFo4bUVTUGpRIiwibmFtZSI6IkFzaHV0b3NoIFNoaW5kZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKVGRCc0dBRDJWVWNBSmFFU2xkc3ZVVS1ZVzV6WnkyN2hmZnhRSlgtSUdMQ2NteDEtcz1zOTYtYyIsImdpdmVuX25hbWUiOiJBc2h1dG9zaCIsImZhbWlseV9uYW1lIjoiU2hpbmRlIiwiaWF0IjoxNzMyOTc3NzU5LCJleHAiOjE3MzI5ODEzNTl9.hgw7krfsRvX88PbF2u20AroL2xsgEfGeD_L1n9MXB9P7NKBsFQ_RW8ZPSnFvUisWGxxzfyToxFSCEZ8QaO_HQVZClDTWekPLQnWXpuGgGrJkOvtSMeM-hi19yDoClxjBDvXJ9PrLaMqHK6BwhtNMehBwHtngu9mmQbh0C59hjbpoS4liWKjKZfUSEjhIX5dNgCWGMswp8-yWPYB6T9e0JAlk2GoPuxhN1JcXbhLm8fsujMdqTLolHEDUBlfMX8z4MMgALcEDl6HROScIh73ZubXWyOYGXAklkKp2xXDA40oVnMpS377VYJPCKce1UehQzlm1p9b8BWZQTOoXY3tvEw'}
+access token: ya29.a0AeDClZAOWjjMy-d1KquRCw6JqegXVQU_LHaWXjKXZTDQVY_cssXh8yy48iHwviwHxnytXjH1KP2xu4ABjqfDDRO52QaWyKo6MJcPT8QnKFnev7gWLUttHrVsfq-OzGZr2m4JamvO4lV0X911_E2v6yvc54hAPWbwDQ41Sgy6aCgYKAUwSARESFQHGX2MiTW07_IPdejOu7tE_4pqiUg0175
+user data: {'id': '111677539550134212793', 'email': 'ashutoshshinde67@gmail.com', 'verified_email': True, 'name': 'Ashutosh Shinde', 'given_name': 'Ashutosh', 'family_name': 'Shinde', 'picture': 'https://lh3.googleusercontent.com/a/ACg8ocJTdBsGAD2VUcAJaESldsvUU-YW5zZy27hffxQJX-IGLCcmx1-s=s96-c'}
+"GET /user-management/api/auth/google/callback?code=4%2F0AeanS0YNpjiT4wV_3ITXnqL73nMOrrnvfioRoLS6lnb_OgogyneMucizStYOBYiz7HTipA&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent HTTP/1.1" 302 0
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+token response data: {'access_token': 'ya29.a0AeDClZC3jhNfaCUS-ei-7oxq5PoDlTpG00Kp7oWKzxupl4bG_tCGFjVE9ARMJonjNzNlUqa5mfCh33xCB3Dfv4-T2QgVLaCkL9iK2JF5Z0Qeo2vVetqybBFMy9WzrEdS0BnRj6-Hzynv7NyCcA-qwXvOhfSalR4xIP9ui1LPaCgYKAX0SARESFQHGX2MiAtHMPMs1qskMp3qlzF09sg0175', 'expires_in': 3599, 'scope': 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid', 'token_type': 'Bearer', 'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE2Nzc1Mzk1NTAxMzQyMTI3OTMiLCJlbWFpbCI6ImFzaHV0b3Noc2hpbmRlNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiI5c3BBOExDeDc4aWRhT0hGcFB1RU9RIiwibmFtZSI6IkFzaHV0b3NoIFNoaW5kZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKVGRCc0dBRDJWVWNBSmFFU2xkc3ZVVS1ZVzV6WnkyN2hmZnhRSlgtSUdMQ2NteDEtcz1zOTYtYyIsImdpdmVuX25hbWUiOiJBc2h1dG9zaCIsImZhbWlseV9uYW1lIjoiU2hpbmRlIiwiaWF0IjoxNzMzMDQ0ODU1LCJleHAiOjE3MzMwNDg0NTV9.AhLOPK9eyZkkLAShT866TUkXGWT-p-R6gqtCwQa2z3CA3DX4rDjjtM6rCcevYgiDjuNj-oTdjq-L7GdZZa0IE4_IG2w8UOBPeg-BI9HY254b2B8MRJrDcWcd9hMuuib473scKWa7Mpn1EfwCD30Mpowor3epiW_pBzN-Ufo_68__1syff-1XRRJAslsh93hUeg2Vv8ZqCEqRPm5EcatGc_fSNJx3bESrCI_TOMggi9zo1T7PS4a9ZNN4dVxS9kNBf4L09R8_oQna1DHA9vdnlE3FDtEtGZwWIT8L_VicQlID-m5InhW3O-n8HMTfd5xh4GyzhzOgg1movHwBt-yFow'}
+access token: ya29.a0AeDClZC3jhNfaCUS-ei-7oxq5PoDlTpG00Kp7oWKzxupl4bG_tCGFjVE9ARMJonjNzNlUqa5mfCh33xCB3Dfv4-T2QgVLaCkL9iK2JF5Z0Qeo2vVetqybBFMy9WzrEdS0BnRj6-Hzynv7NyCcA-qwXvOhfSalR4xIP9ui1LPaCgYKAX0SARESFQHGX2MiAtHMPMs1qskMp3qlzF09sg0175
+user data: {'id': '111677539550134212793', 'email': 'ashutoshshinde67@gmail.com', 'verified_email': True, 'name': 'Ashutosh Shinde', 'given_name': 'Ashutosh', 'family_name': 'Shinde', 'picture': 'https://lh3.googleusercontent.com/a/ACg8ocJTdBsGAD2VUcAJaESldsvUU-YW5zZy27hffxQJX-IGLCcmx1-s=s96-c'}
+"GET /user-management/api/auth/google/callback?code=4%2F0AeanS0Z0PzcS2j2IvJidAJgic5qBKDxGDIJSaOoLRnghd0WcSWXqt-Qv4FjmfJSFgoEKeg&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent HTTP/1.1" 302 0
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\ashutosh.shinde\Documents\GitHub\hrms\user_management\views.py changed, reloading.
+Watching for file changes with StatReloader
+"OPTIONS /user-management/api/login/ HTTP/1.1" 200 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
+token response data: {'access_token': 'ya29.a0AeDClZBu8yZJXVKelCF4AS5oTIlRhZSKFLvf-xI916jghXyDXC3U9l9MybnAh_Ce2OVKHAACZWfjUFfhl644gKt07zczQd5Wr58YXyVpXQu8aMMjufdaCvCb01uNW723cMBnP0z2pWasUjhzX2zFezBpRoXRK1XETlIku_N_aCgYKAbYSARESFQHGX2MiaM9bKe0L5QNuwNPnUvEKWA0175', 'expires_in': 3599, 'scope': 'openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email', 'token_type': 'Bearer', 'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODQ3NjY2NTYxMDYtZnBka2lpaGVyNTB2Mjk4bzJibDYwOXBpcGM4MW9xcmcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE2Nzc1Mzk1NTAxMzQyMTI3OTMiLCJlbWFpbCI6ImFzaHV0b3Noc2hpbmRlNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ2SmhtSDF6ZFpPTWpiTTBVLURfMUNRIiwibmFtZSI6IkFzaHV0b3NoIFNoaW5kZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKVGRCc0dBRDJWVWNBSmFFU2xkc3ZVVS1ZVzV6WnkyN2hmZnhRSlgtSUdMQ2NteDEtcz1zOTYtYyIsImdpdmVuX25hbWUiOiJBc2h1dG9zaCIsImZhbWlseV9uYW1lIjoiU2hpbmRlIiwiaWF0IjoxNzMzMDQ3MDY2LCJleHAiOjE3MzMwNTA2NjZ9.deEAMSDvVBlT4Eam2lmRppZ4fuJOB0CshgJEG28c-erRe2PlzvlSTifyksMQS4n17_CZ52SnajQupUYJdxaS_bQqHvklPsrGgqbH7ipakbeFA_8H_XA6-pJJ1QNMdljstZntEWpAq9pDwwdC19jHO0-tWAQKNWNtY9Gl_aTSW1GWrM9GRfM6cjGWd57nvtQOTpnmQLH_GPvLkHJIADG9N2Fje3_H9zpYgQmkgfdPlKYSPyAmI5neY8uySWpTH4FPY0HreZW9vV9hfDWx5TSEO6aOiPAbn6CFn_6Oihiwgt1Iz5cFXQ0wSUcS-XaOUhX_LkYFlnE4007bHhrJRAtphg'}
+access token: ya29.a0AeDClZBu8yZJXVKelCF4AS5oTIlRhZSKFLvf-xI916jghXyDXC3U9l9MybnAh_Ce2OVKHAACZWfjUFfhl644gKt07zczQd5Wr58YXyVpXQu8aMMjufdaCvCb01uNW723cMBnP0z2pWasUjhzX2zFezBpRoXRK1XETlIku_N_aCgYKAbYSARESFQHGX2MiaM9bKe0L5QNuwNPnUvEKWA0175
+user data: {'id': '111677539550134212793', 'email': 'ashutoshshinde67@gmail.com', 'verified_email': True, 'name': 'Ashutosh Shinde', 'given_name': 'Ashutosh', 'family_name': 'Shinde', 'picture': 'https://lh3.googleusercontent.com/a/ACg8ocJTdBsGAD2VUcAJaESldsvUU-YW5zZy27hffxQJX-IGLCcmx1-s=s96-c'}
+"GET /user-management/api/auth/google/callback?code=4%2F0AeanS0bYsBxTrKlEpNNQEKBSSRxkYK8bF6BIBkxMTmJAkkb_mf83KBO0KFL7BLsjR7pIOg&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent HTTP/1.1" 302 0
+"POST /user-management/api/login/ HTTP/1.1" 200 553
