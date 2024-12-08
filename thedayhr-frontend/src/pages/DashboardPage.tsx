@@ -8,25 +8,23 @@ const DashboardPage: React.FC = () => {
   const { email, message, logout } = useUserContext();
 
   useEffect(() => {
-    // Parse query parameters
-    const params = new URLSearchParams(location.search);
-    const accessToken = params.get("access");
-    const refreshToken = params.get("refresh");
-    if (accessToken && refreshToken) {
-      // Store tokens in sessionStorage
-      sessionStorage.setItem("accessToken", accessToken);
-      sessionStorage.setItem("refreshToken", refreshToken);
+      const checkAuth = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/user-management/api/token/refresh/", {
+                method: "POST",
+                credentials: "include", // Include cookies
+            });
 
-      // Remove tokens from the URL
-      navigate("/", { replace: true });
-    } else {
-      // Fetch user data with existing token or redirect to login
-      const storedAccessToken = sessionStorage.getItem("accessToken");
-      if (!storedAccessToken) {
-        navigate("/login");
-      }
-    }
-  }, [location, navigate]);
+            if (!response.ok) {
+                navigate("/login");
+            }
+        } catch (err) {
+            navigate("/login");
+        }
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   return (
     <main className="min-h-screen w-full bg-gray-50 flex items-center justify-center p-4">

@@ -104,6 +104,50 @@ class CustomUser(AbstractUser):
             fail_silently=False,
         )
 
+class PersonalInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="personal_info")
+    full_name = models.CharField(max_length=255)
+    gender = models.CharField(max_length=10, choices=[('Male','Male'), ('Female','Female'), ('Other','Other')])
+    date_of_birth = models.DateField()
+
+    def __str__(self) -> str:
+        return f"Personal Info for {self.user.email}"
+
+class ContactInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="contact_info")
+    mobile_number = models.CharField(max_length=20)
+    email = models.EmailField()
+    emergency_contact = models.JSONField(default=dict)
+
+    def __str__(self):
+        return f"Contact Info for {self.user.email}"
+
+class CompanyInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="company_info")
+    department = models.CharField(max_length=255)
+    joining_date = models.DateField()
+    reports_to = models.JSONField(default=dict)  # Stores name and designation
+
+    def __str__(self):
+        return f"Company Info for {self.user.email}"
+
+class ProfessionalSummaryInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="professional_summary")
+    summary = models.TextField()
+
+    def __str__(self):
+        return f"Professional Summary for {self.user.email}"
+    
+class FinancialIdentityDetailsInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="financial_details")
+    aadhaar_number = models.CharField(max_length=20)
+    pan_number = models.CharField(max_length=10)
+    bank_name = models.CharField(max_length=255)
+    account_number = models.CharField(max_length=20)
+    ifsc_code = models.CharField(max_length=15)
+
+    def __str__(self):
+        return f"Financial Details for {self.user.email}"
 
 class OAuth2Token(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="oauth2_token")

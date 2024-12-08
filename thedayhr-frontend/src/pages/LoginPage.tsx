@@ -2,6 +2,7 @@ import { Loader2, Mail, Lock, LogIn, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "./UserContext";
+import apiClient from "../api/axiosInstance";
 
 interface TouchedState {
   email: boolean;
@@ -51,27 +52,26 @@ export default function LoginPage() {
     setError("");
     try {
       // Make an API call to the Django login endpoint
-    const response = await fetch("http://localhost:8000/user-management/api/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+    const response = await apiClient.post("/user-management/api/login/", {
+      email,
+      password
     });
 
-    const data = await response.json();
     // console.log('data: ',data)
-    if (response.ok) {
-      sessionStorage.setItem("accessToken", data.access)
-      sessionStorage.setItem("refreshToken", data.refresh)
+    if (response.status == 200) {
+      const data = response.data;
       setUserData(data.useremail, data.message);
       navigate("/");
     } else {
       // Handle API errors
-      setError(data.error || "Login failed. Please try again.");
-    }
-    } catch (err) {
       setError("Login failed. Please try again.");
+    }
+    } catch (err:any) {
+      if (err.response?.data?.error) {
+          setError(err.response.data.error); // API-provided error message
+      } else {
+          setError("Login failed. Please try again."); // Generic error message
+      }
     } finally {
       setIsLoading(false);
     }

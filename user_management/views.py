@@ -1,12 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import CustomUser
-from .serializers import UserSerializer
+from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.exceptions import AuthenticationFailed
+from .serializers import UserSerializer, PersonalInfoSerializer, ContactInfoSerializer, CompanyInfoSerializer, ProfessionalSummaryInfoSerializer, FinancialIdentityDetailsSerializer
 from django.contrib.auth import authenticate, get_user_model
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 import uuid
 import requests
@@ -52,6 +56,7 @@ class VerifyEmailView(APIView):
             return Response({"error": "Invalid or expired verification code."}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPIView(APIView):
+    permission_classes = []
     def post(self, request, *args, **kwargs):
         email = request.data.get("email")
         password = request.data.get("password")
@@ -64,16 +69,39 @@ class LoginAPIView(APIView):
         if user:
             if user.is_active:
                 refresh = RefreshToken.for_user(user)
-                return Response({
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token),
+                response = Response({
                     "useremail": user.email,
                     "message": "Login successful."
                 }, status=status.HTTP_200_OK)
+                response.set_cookie("access", str(refresh.access_token), httponly=True, secure=True, samesite="Strict")
+                response.set_cookie("refresh", str(refresh), httponly=True, secure=True, samesite="Strict")
+                return response
             else:
                 return Response({"error": "Account is inactive. Please verify your email."}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "Invalid email or password."}, status=status.HTTP_401_UNAUTHORIZED)
+
+class LogoutAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        response = Response({"message": "Logged out successfully"})
+        response.delete_cookie("access")
+        response.delete_cookie("refresh")
+        return response
+
+class RefreshTokenAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get("refresh")
+        if not refresh_token:
+            return Response({"error": "Refresh token is missing"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = refresh.access_token
+            response = Response({"message": "Token refreshed successfully"})
+            response.set_cookie("access", str(access_token), httponly=True, secure=True, samesite="Strict")
+            return response
+        except Exception as e:
+            return Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class GoogleAuthCallbackAPIView(APIView):
     def get(self, request, *args, **kwargs):
@@ -123,16 +151,155 @@ class GoogleAuthCallbackAPIView(APIView):
             user.save()
         
         refresh = RefreshToken.for_user(user)
-        access = str(refresh.access_token)
-        refresh = str(access)
+        response = redirect("http://localhost:3000")
+        response.set_cookie("access", str(refresh.access_token), httponly=True, secure=True, samesite="Strict")
+        response.set_cookie("refresh", str(refresh), httponly=True, secure=True, samesite="Strict")
+        return response
+    
+class PersonalInfoView(APIView):
+    permission_classes = [IsAuthenticated]
 
-        # # Optionally, generate a session or JWT token for the user
-        # return Response(
-        #     {
-        #         "message": "Login successful.",
-        #         "useremail": user.email,
-        #         "new_user": created,
-        #     },
-        #     status=status.HTTP_200_OK,
-        # )
-        return redirect(f"http://localhost:3000?access={access}&refresh={refresh}")
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        personal_info = PersonalInfo.objects.filter(user=request.user).first()
+        if personal_info:   
+            serializer = PersonalInfoSerializer(personal_info)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No personal information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+class ContactInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        contact_info = ContactInfo.objects.filter(user=request.user).first()
+        if contact_info:   
+            serializer = ContactInfoSerializer(contact_info)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No contact information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        # Check if the user already has personal information
+        contact_info = ContactInfo.objects.filter(user=request.user).first()
+        # If personal information already exists for the user, update it
+        if contact_info:
+            serializer = ContactInfoSerializer(contact_info, data=request.data, partial=True)
+            logger.info(f"Updating existing contact information: {serializer.initial_data}")
+        else:
+            serializer = ContactInfoSerializer(data=request.data)
+            # Log initial data before validation
+            logger.info(f"Creating new contact information: {serializer.initial_data}")
+        logger.info(f"Initial serialized data: {serializer.initial_data}")
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            # Log the validated data
+            logger.info(f"Validated serialized data: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED if not contact_info else status.HTTP_200_OK)
+        logger.error(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CompanyInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        company_info = CompanyInfo.objects.filter(user=request.user).first()
+        if company_info:   
+            serializer = CompanyInfoSerializer(company_info)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No company information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        # Check if the user already has personal information
+        company_info = CompanyInfo.objects.filter(user=request.user).first()
+        # If personal information already exists for the user, update it
+        if company_info:
+            serializer = CompanyInfoSerializer(company_info, data=request.data, partial=True)
+            logger.info(f"Updating existing company information: {serializer.initial_data}")
+        else:
+            serializer = CompanyInfoSerializer(data=request.data)
+            # Log initial data before validation
+            logger.info(f"Creating new company information: {serializer.initial_data}")
+        logger.info(f"Initial serialized data: {serializer.initial_data}")
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            # Log the validated data
+            logger.info(f"Validated serialized data: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED if not company_info else status.HTTP_200_OK)
+        logger.error(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfessionalSummaryInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        professional_summary_info = ProfessionalSummaryInfo.objects.filter(user=request.user).first()
+        if professional_summary_info:   
+            serializer = ProfessionalSummaryInfoSerializer(professional_summary_info)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No professional summary information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        # Check if the user already has personal information
+        professional_summary_info = ProfessionalSummaryInfo.objects.filter(user=request.user).first()
+        # If personal information already exists for the user, update it
+        if professional_summary_info:
+            serializer = ProfessionalSummaryInfoSerializer(professional_summary_info, data=request.data, partial=True)
+            logger.info(f"Updating existing professional summary information: {serializer.initial_data}")
+        else:
+            serializer = ProfessionalSummaryInfoSerializer(data=request.data)
+            # Log initial data before validation
+            logger.info(f"Creating new professional summary information: {serializer.initial_data}")
+        logger.info(f"Initial serialized data: {serializer.initial_data}")
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            # Log the validated data
+            logger.info(f"Validated serialized data: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED if not professional_summary_info else status.HTTP_200_OK)
+        logger.error(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class FinancialIdentityDetailsInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        financial_identity_details_info = FinancialIdentityDetailsInfo.objects.filter(user=request.user).first()
+        if financial_identity_details_info:   
+            serializer = FinancialIdentityDetailsSerializer(financial_identity_details_info)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No financial and identity information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        # Check if the user already has personal information
+        financial_identity_details_info = FinancialIdentityDetailsInfo.objects.filter(user=request.user).first()
+        # If personal information already exists for the user, update it
+        if financial_identity_details_info:
+            serializer = FinancialIdentityDetailsSerializer(financial_identity_details_info, data=request.data, partial=True)
+            logger.info(f"Updating existing financial and identity information: {serializer.initial_data}")
+        else:
+            serializer = FinancialIdentityDetailsSerializer(data=request.data)
+            # Log initial data before validation
+            logger.info(f"Creating new financial and identity information: {serializer.initial_data}")
+        logger.info(f"Initial serialized data: {serializer.initial_data}")
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            # Log the validated data
+            logger.info(f"Validated serialized data: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED if not financial_identity_details_info else status.HTTP_200_OK)
+        logger.error(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyTokenView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        try:
+            AccessToken(token)  # Validate the token
+            return Response({"valid": True}, status=200)
+        except Exception:
+            raise AuthenticationFailed("Invalid token")
