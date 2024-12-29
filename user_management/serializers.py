@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo
+from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,4 +39,10 @@ class FinancialIdentityDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FinancialIdentityDetailsInfo
         fields = ['id', 'user', 'aadhaar_number', 'pan_number', 'bank_name', 'account_number', 'ifsc_code']
+        read_only_fields = ['user']
+
+class AchievementsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievements
+        fields = ['id', 'user', 'title', 'date_awarded']
         read_only_fields = ['user']

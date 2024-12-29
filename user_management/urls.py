@@ -17,4 +17,5 @@ urlpatterns = [
     path("api/profile/companyInfo/", views.CompanyInfoView.as_view(), name="company"),
     path("api/profile/professionalSummaryInfo/", views.ProfessionalSummaryInfoView.as_view(), name="professional_summary"),
     path("api/profile/financialDetailsInfo/", views.FinancialIdentityDetailsInfoView.as_view(), name="financial_identity_details"),
+    path("api/profile/achievementsInfo/", views.AchievementsInfoView.as_view(), name="achievements"),
 ]

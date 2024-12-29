@@ -149,6 +149,14 @@ class FinancialIdentityDetailsInfo(models.Model):
     def __str__(self):
         return f"Financial Details for {self.user.email}"
 
+class Achievements(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="achievements")  # Assuming a user model exists
+    title = models.CharField(max_length=255)
+    date_awarded = models.DateField()
+
+    def __str__(self):
+        return f"{self.title} ({self.date_awarded})"
+    
 class OAuth2Token(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="oauth2_token")
     access_token = models.TextField()

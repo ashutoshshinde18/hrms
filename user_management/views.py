@@ -5,13 +5,14 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo
+from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer, PersonalInfoSerializer, ContactInfoSerializer, CompanyInfoSerializer, ProfessionalSummaryInfoSerializer, FinancialIdentityDetailsSerializer
+from .serializers import UserSerializer, PersonalInfoSerializer, ContactInfoSerializer, CompanyInfoSerializer, ProfessionalSummaryInfoSerializer, FinancialIdentityDetailsSerializer, AchievementsSerializer
 from django.contrib.auth import authenticate, get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from django.db import transaction
 import uuid
 import requests
 import logging
@@ -156,6 +157,15 @@ class GoogleAuthCallbackAPIView(APIView):
         response.set_cookie("refresh", str(refresh), httponly=True, secure=True, samesite="Strict")
         return response
     
+class VerifyTokenView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        try:
+            AccessToken(token)  # Validate the token
+            return Response({"valid": True}, status=200)
+        except Exception:
+            raise AuthenticationFailed("Invalid token")
+        
 class PersonalInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -179,24 +189,24 @@ class ContactInfoView(APIView):
         return Response({"message": "No contact information found"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request):
-        logger.info(f"request user: {request.user}")
+        # logger.info(f"request user: {request.user}")
         # Check if the user already has personal information
         contact_info = ContactInfo.objects.filter(user=request.user).first()
         # If personal information already exists for the user, update it
         if contact_info:
             serializer = ContactInfoSerializer(contact_info, data=request.data, partial=True)
-            logger.info(f"Updating existing contact information: {serializer.initial_data}")
+            # logger.info(f"Updating existing contact information: {serializer.initial_data}")
         else:
             serializer = ContactInfoSerializer(data=request.data)
             # Log initial data before validation
-            logger.info(f"Creating new contact information: {serializer.initial_data}")
-        logger.info(f"Initial serialized data: {serializer.initial_data}")
+            # logger.info(f"Creating new contact information: {serializer.initial_data}")
+        # logger.info(f"Initial serialized data: {serializer.initial_data}")
         if serializer.is_valid():
             serializer.save(user=request.user)
             # Log the validated data
-            logger.info(f"Validated serialized data: {serializer.data}")
+            # logger.info(f"Validated serialized data: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED if not contact_info else status.HTTP_200_OK)
-        logger.error(f"Serializer errors: {serializer.errors}")
+        # logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class CompanyInfoView(APIView):
@@ -211,24 +221,24 @@ class CompanyInfoView(APIView):
         return Response({"message": "No company information found"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request):
-        logger.info(f"request user: {request.user}")
+        # logger.info(f"request user: {request.user}")
         # Check if the user already has personal information
         company_info = CompanyInfo.objects.filter(user=request.user).first()
         # If personal information already exists for the user, update it
         if company_info:
             serializer = CompanyInfoSerializer(company_info, data=request.data, partial=True)
-            logger.info(f"Updating existing company information: {serializer.initial_data}")
+            # logger.info(f"Updating existing company information: {serializer.initial_data}")
         else:
             serializer = CompanyInfoSerializer(data=request.data)
             # Log initial data before validation
-            logger.info(f"Creating new company information: {serializer.initial_data}")
-        logger.info(f"Initial serialized data: {serializer.initial_data}")
+            # logger.info(f"Creating new company information: {serializer.initial_data}")
+        # logger.info(f"Initial serialized data: {serializer.initial_data}")
         if serializer.is_valid():
             serializer.save(user=request.user)
             # Log the validated data
-            logger.info(f"Validated serialized data: {serializer.data}")
+            # logger.info(f"Validated serialized data: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED if not company_info else status.HTTP_200_OK)
-        logger.error(f"Serializer errors: {serializer.errors}")
+        # logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ProfessionalSummaryInfoView(APIView):
@@ -243,24 +253,24 @@ class ProfessionalSummaryInfoView(APIView):
         return Response({"message": "No professional summary information found"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request):
-        logger.info(f"request user: {request.user}")
+        # logger.info(f"request user: {request.user}")
         # Check if the user already has personal information
         professional_summary_info = ProfessionalSummaryInfo.objects.filter(user=request.user).first()
         # If personal information already exists for the user, update it
         if professional_summary_info:
             serializer = ProfessionalSummaryInfoSerializer(professional_summary_info, data=request.data, partial=True)
-            logger.info(f"Updating existing professional summary information: {serializer.initial_data}")
+            # logger.info(f"Updating existing professional summary information: {serializer.initial_data}")
         else:
             serializer = ProfessionalSummaryInfoSerializer(data=request.data)
             # Log initial data before validation
-            logger.info(f"Creating new professional summary information: {serializer.initial_data}")
-        logger.info(f"Initial serialized data: {serializer.initial_data}")
+            # logger.info(f"Creating new professional summary information: {serializer.initial_data}")
+        # logger.info(f"Initial serialized data: {serializer.initial_data}")
         if serializer.is_valid():
             serializer.save(user=request.user)
             # Log the validated data
-            logger.info(f"Validated serialized data: {serializer.data}")
+            # logger.info(f"Validated serialized data: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED if not professional_summary_info else status.HTTP_200_OK)
-        logger.error(f"Serializer errors: {serializer.errors}")
+        # logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class FinancialIdentityDetailsInfoView(APIView):
@@ -275,31 +285,94 @@ class FinancialIdentityDetailsInfoView(APIView):
         return Response({"message": "No financial and identity information found"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request):
-        logger.info(f"request user: {request.user}")
+        # logger.info(f"request user: {request.user}")
         # Check if the user already has personal information
         financial_identity_details_info = FinancialIdentityDetailsInfo.objects.filter(user=request.user).first()
         # If personal information already exists for the user, update it
         if financial_identity_details_info:
             serializer = FinancialIdentityDetailsSerializer(financial_identity_details_info, data=request.data, partial=True)
-            logger.info(f"Updating existing financial and identity information: {serializer.initial_data}")
+            # logger.info(f"Updating existing financial and identity information: {serializer.initial_data}")
         else:
             serializer = FinancialIdentityDetailsSerializer(data=request.data)
             # Log initial data before validation
-            logger.info(f"Creating new financial and identity information: {serializer.initial_data}")
-        logger.info(f"Initial serialized data: {serializer.initial_data}")
+            # logger.info(f"Creating new financial and identity information: {serializer.initial_data}")
+        # logger.info(f"Initial serialized data: {serializer.initial_data}")
         if serializer.is_valid():
             serializer.save(user=request.user)
             # Log the validated data
-            logger.info(f"Validated serialized data: {serializer.data}")
+            # logger.info(f"Validated serialized data: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED if not financial_identity_details_info else status.HTTP_200_OK)
-        logger.error(f"Serializer errors: {serializer.errors}")
+        # logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AchievementsInfoView(APIView):
+    permission_classes = [IsAuthenticated]
 
-class VerifyTokenView(APIView):
+    @csrf_exempt  # Disable CSRF checks for this view
     def get(self, request):
-        token = request.COOKIES.get('access')
+        achievements_info = Achievements.objects.filter(user=request.user)
+        logger.info(f"achievements array: {achievements_info}")
+        if achievements_info:   
+            serializer = AchievementsSerializer(achievements_info, many=True)
+            logger.info(f"achievements serializer data for get: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No achievements information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        # Clear existing achievements
+        # Add new achievements
+        # Extract the achievementsInfo list
+        logger.info(f"request data: {request.data}")
+        achievements_data = request.data.get('achievementsInfo', [])
+        deleted_achievements = request.data.get('meta', {}).get('deletedAchievements', [])
+        logger.info(f"achievements_data: {achievements_data}")
+        updated_achievements = []
         try:
-            AccessToken(token)  # Validate the token
-            return Response({"valid": True}, status=200)
-        except Exception:
-            raise AuthenticationFailed("Invalid token")
+            # Delete achievements based on IDs in the meta.deletedAchievements field
+            for achievement_id in deleted_achievements:
+                try:
+                    achievement = Achievements.objects.get(id=achievement_id, user=request.user)
+                    achievement.delete()
+                    logger.info(f"Deleted achievement with id {achievement_id}")
+                except Achievements.DoesNotExist:
+                    logger.info(f"Achievement with id {achievement_id} not found for user {request.user}. Skipping.")
+            for achievement_data in achievements_data:
+                achievement_id = achievement_data.get("id")
+                
+                # if achievement_data.get('deleted'):
+                #     try:
+                #         achievement = Achievements.objects.get(id=achievement_id, user=request.user)
+                #         achievement.delete()
+                #         logger.info(f"Deleted achievement with id {achievement_id}")
+                #     except Achievements.DoesNotExist:
+                #         logger.info(f"Achievement with id {achievement_id} not found for user {request.user}. Skipping.")
+                # else:
+                if achievement_id:
+                    try:
+                        achievement = Achievements.objects.get(id=achievement_id, user=request.user)
+                        serializer = AchievementsSerializer(instance=achievement, data=achievement_data, partial=True)
+                        if serializer.is_valid():
+                            serializer.save(user=request.user)
+                            logger.info(f"Updated achievement: {serializer.data}")
+                        else:
+                            logger.info(f"Error updating achievement {achievement_id}: {serializer.errors}")
+                    except Achievements.DoesNotExist:
+                        logger.info(f"Achievement with id {achievement_id} not found for user {request.user}. Skipping.")
+                else:
+                    serializer = AchievementsSerializer(data=achievement_data)
+                    if serializer.is_valid():
+                        new_achievement = serializer.save(user=request.user)
+                        updated_achievements.append(AchievementsSerializer(new_achievement).data)
+                        logger.info(f"Created new achievement: {serializer.data}")
+                    else:
+                        logger.error(f"Error creating new achievement: {serializer.errors}")
+            return Response(updated_achievements, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error while saving achievements: {e}")
+            return Response(
+                {"detail": "Internal Server Error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
