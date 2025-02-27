@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 
 import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useUserContext } from "./UserContext";
+import { Outlet, useNavigate, Link } from "react-router-dom";
+import { useUserContext } from "../UserManagementComponent/UserContext";
 
 interface NavigationItem {
     icon: React.ReactNode;
@@ -55,11 +55,13 @@ const Layout: React.FC = () => {
                         <button onClick={toggleSidebar} className="lg:hidden">
                             <Menu className="h-6 w-6" />
                         </button>
-                        <img
-                            src="https://placehold.co/120x40"
-                            alt="Company Logo"
-                            className="h-8"
-                        />
+                        <Link to="/">
+                            <img
+                                src="https://placehold.co/120x40"
+                                alt="Company Logo"
+                                className="h-8"
+                            />
+                        </Link>
                         <img
                             src="https://placehold.co/40x40"
                             alt="Client Logo"
@@ -96,7 +98,7 @@ const Layout: React.FC = () => {
                                 <div className="absolute right-0 top-full mt-2 w-48 origin-top-right animate-dropdown rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
                                     <div className="border-b border-gray-100 px-4 py-3">
                                         <p className="text-sm font-medium">John Doe</p>
-                                        <p className="text-xs text-gray-500">john.doe@company.com</p>
+                                        <p className="text-xs text-gray-500">{email}</p>
                                     </div>
                                     <button onClick={handleProfileClick} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                         <User className="mr-2 h-4 w-4" />

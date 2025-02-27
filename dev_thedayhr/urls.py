@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user-management/', include('user_management.urls')), # Include the URLs for your user management app
+    path('user-management/', include('user_management.urls')),
+    path('attendance/', include('attendance_tracker.urls')),
 ]

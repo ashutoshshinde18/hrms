@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "../../api/axiosInstance";
+import RegularizationModal from "./RegularizationModal";
 
 type AttendanceLog = {
   date: string;
@@ -23,7 +24,18 @@ export function LogsRequestsCard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedLog, setSelectedLog] = useState<{ date: string; clockIn: string } | null>(null);
+
+  const handleRegularizeClick = (date: string, clockIn: string) => {
+    setSelectedLog({ date, clockIn });
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   useEffect(() => {
     const fetchAttendanceLogs = async () => {
       try {
@@ -52,7 +64,7 @@ export function LogsRequestsCard() {
   // Helper to calculate hour difference
   const calculateHours = (clockIn: string, clockOut: string): number => {
     if (!clockIn || !clockOut) return 0;
-    
+
     const parseTime = (time: string): Date => {
       const [hourMinute, period] = time.split(" ");
       const [hours, minutes] = hourMinute.split(":").map((val) => parseInt(val));
@@ -66,11 +78,11 @@ export function LogsRequestsCard() {
       } else if (period === "AM" && hours === 12) {
         adjustedHours = 0;
       }
-      
+
       date.setHours(adjustedHours, minutes, 0, 0);
       return date;
     };
-    
+
     const inTime = parseTime(clockIn);
     const outTime = parseTime(clockOut);
 
@@ -79,11 +91,11 @@ export function LogsRequestsCard() {
 
     return Math.max(0, diffHours); // Ensure non-negative value
   };
-  
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  
+
   const maxWorkingHours = 12; // Define the max working hours for progress
   return (
     <div className="bg-white rounded-lg shadow p-6 lg:col-span-2">
@@ -136,7 +148,8 @@ export function LogsRequestsCard() {
                 const hoursWorked = calculateHours(log.clockIn || "", log.clockOut || "");
                 const progress = Math.min((hoursWorked / maxWorkingHours) * 100, 100); // Ensure valid progress percentage
 
-                const missedClockout = !log.clockOut && hoursWorked > 12;
+                const missedClockout = !log.clockOut || hoursWorked > 12;
+                console.log('missed clock out: ',missedClockout,log.clockOut)
                 return (
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -166,8 +179,10 @@ export function LogsRequestsCard() {
                       {log.duration}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {(!log.clockIn || !log.clockOut) ? (
-                        <button className="text-blue-600 hover:text-blue-800">
+                      {missedClockout ? (
+                        <button
+                          onClick={() => handleRegularizeClick(log.date, log.clockIn || "N/A")}
+                          className="text-blue-600 hover:text-blue-800">
                           Regularize
                         </button>
                       ) : (
@@ -179,6 +194,14 @@ export function LogsRequestsCard() {
               })}
             </tbody>
           </table>
+          {modalOpen && selectedLog && (
+            <RegularizationModal
+              isOpen={modalOpen}
+              date={selectedLog.date}
+              clockIn={selectedLog.clockIn}
+              onClose={handleCloseModal}
+            />
+          )}
         </div>
       ) : (
         <div className="overflow-x-auto">

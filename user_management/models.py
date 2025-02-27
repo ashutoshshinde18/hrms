@@ -39,6 +39,10 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
+        default_role, created = Role.objects.get_or_create(name="Employee")
+        UserRole.objects.create(user=user, role=default_role)
+
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
@@ -50,7 +54,12 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
 
-        return self.create_user(email, password, **extra_fields)
+        user = self.create_user(email, password, **extra_fields)
+
+        admin_role, created = Role.objects.get_or_create(name="Admin")
+        user_role = UserRole.objects.get_or_create(user=user, role=admin_role)
+
+        return user
 
 
 class CustomUser(AbstractUser):
@@ -124,6 +133,7 @@ class ContactInfo(models.Model):
 
 class CompanyInfo(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="company_info")
+    role = models.CharField(max_length=50)
     department = models.CharField(max_length=255)
     joining_date = models.DateField()
     reports_to = models.JSONField(default=dict)  # Stores name and designation
@@ -156,6 +166,16 @@ class Achievements(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.date_awarded})"
+    
+class Experiences(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="experiences")  # Assuming a user model exists
+    role = models.CharField(max_length=50)
+    company = models.CharField(max_length=50)
+    period = models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.role} ({self.company})"
     
 class OAuth2Token(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="oauth2_token")

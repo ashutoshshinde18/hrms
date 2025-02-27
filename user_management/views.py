@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements
+from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements, Experiences
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer, PersonalInfoSerializer, ContactInfoSerializer, CompanyInfoSerializer, ProfessionalSummaryInfoSerializer, FinancialIdentityDetailsSerializer, AchievementsSerializer
+from .serializers import UserSerializer, PersonalInfoSerializer, ContactInfoSerializer, CompanyInfoSerializer, ProfessionalSummaryInfoSerializer, FinancialIdentityDetailsSerializer, AchievementsSerializer, ExperiencesSerializer, TeamMembersSerializer, RoleUpdateSerializer
+
 from django.contrib.auth import authenticate, get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
@@ -21,7 +23,9 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 class SignUpAPIView(APIView):
+    permission_classes = []
     def post(self, request, *args, **kwargs):
+        logger.info(f'signup request data: {request.data}')
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             # Create the user but set them as inactive initially
@@ -41,6 +45,7 @@ class SignUpAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailView(APIView):
+    permission_classes = []
     def get(self, request, verification_code, *args, **kwargs):
         try:
             user = CustomUser.objects.get(email_verification_code=verification_code)
@@ -72,6 +77,7 @@ class LoginAPIView(APIView):
                 refresh = RefreshToken.for_user(user)
                 response = Response({
                     "useremail": user.email,
+                    "is_superuser": user.is_superuser,
                     "message": "Login successful."
                 }, status=status.HTTP_200_OK)
                 response.set_cookie("access", str(refresh.access_token), httponly=True, secure=True, samesite="Strict")
@@ -176,6 +182,27 @@ class PersonalInfoView(APIView):
             serializer = PersonalInfoSerializer(personal_info)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message": "No personal information found"}, status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request):
+        # logger.info(f"request user: {request.user}")
+        # Check if the user already has personal information
+        personal_info = PersonalInfo.objects.filter(user=request.user).first()
+        # If personal information already exists for the user, update it
+        if personal_info:
+            serializer = PersonalInfoSerializer(personal_info, data=request.data, partial=True)
+            # logger.info(f"Updating existing contact information: {serializer.initial_data}")
+        else:
+            serializer = PersonalInfoSerializer(data=request.data)
+            # Log initial data before validation
+            # logger.info(f"Creating new contact information: {serializer.initial_data}")
+        # logger.info(f"Initial serialized data: {serializer.initial_data}")
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            # Log the validated data
+            # logger.info(f"Validated serialized data: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED if not personal_info else status.HTTP_200_OK)
+        # logger.error(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ContactInfoView(APIView):
     permission_classes = [IsAuthenticated]
@@ -222,8 +249,10 @@ class CompanyInfoView(APIView):
     
     def post(self, request):
         # logger.info(f"request user: {request.user}")
+        logger.info(f"request data for company info: {request.data}")
         # Check if the user already has personal information
         company_info = CompanyInfo.objects.filter(user=request.user).first()
+        logger.info(f"company info: {company_info}")
         # If personal information already exists for the user, update it
         if company_info:
             serializer = CompanyInfoSerializer(company_info, data=request.data, partial=True)
@@ -320,9 +349,6 @@ class AchievementsInfoView(APIView):
     
     def post(self, request):
         logger.info(f"request user: {request.user}")
-        # Clear existing achievements
-        # Add new achievements
-        # Extract the achievementsInfo list
         logger.info(f"request data: {request.data}")
         achievements_data = request.data.get('achievementsInfo', [])
         deleted_achievements = request.data.get('meta', {}).get('deletedAchievements', [])
@@ -339,15 +365,6 @@ class AchievementsInfoView(APIView):
                     logger.info(f"Achievement with id {achievement_id} not found for user {request.user}. Skipping.")
             for achievement_data in achievements_data:
                 achievement_id = achievement_data.get("id")
-                
-                # if achievement_data.get('deleted'):
-                #     try:
-                #         achievement = Achievements.objects.get(id=achievement_id, user=request.user)
-                #         achievement.delete()
-                #         logger.info(f"Deleted achievement with id {achievement_id}")
-                #     except Achievements.DoesNotExist:
-                #         logger.info(f"Achievement with id {achievement_id} not found for user {request.user}. Skipping.")
-                # else:
                 if achievement_id:
                     try:
                         achievement = Achievements.objects.get(id=achievement_id, user=request.user)
@@ -374,5 +391,131 @@ class AchievementsInfoView(APIView):
                 {"detail": "Internal Server Error"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+        
+class ExperiencesInfoView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    @csrf_exempt  # Disable CSRF checks for this view
+    def get(self, request):
+        experiences_info = Experiences.objects.filter(user=request.user)
+        logger.info(f"experiences array: {experiences_info}")
+        if experiences_info:   
+            serializer = ExperiencesSerializer(experiences_info, many=True)
+            logger.info(f"experiences serializer data for get: {serializer.data}")
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "No experiences information found"}, status=status.HTTP_204_NO_CONTENT)
+    
+    def post(self, request):
+        logger.info(f"request user: {request.user}")
+        logger.info(f"request data: {request.data}")
+        experiences_data = request.data.get('experiencesInfo', [])
+        deleted_experiences = request.data.get('meta', {}).get('deletedExperiences', [])
+        logger.info(f"experiences_data: {experiences_data}")
+        updated_experiences = []
+        try:
+            # Delete experiences based on IDs in the meta.deletedExperiences field
+            for experience_id in deleted_experiences:
+                try:
+                    experience = Experiences.objects.get(id=experience_id, user=request.user)
+                    experience.delete()
+                    logger.info(f"Deleted experience with id {experience_id}")
+                except Experiences.DoesNotExist:
+                    logger.info(f"Experience with id {experience_id} not found for user {request.user}. Skipping.")
+            for experience_data in experiences_data:
+                experience_id = experience_data.get("id")
+                if experience_id:
+                    try:
+                        experience = Experiences.objects.get(id=experience_id, user=request.user)
+                        serializer = ExperiencesSerializer(instance=experience, data=experience_data, partial=True)
+                        if serializer.is_valid():
+                            serializer.save(user=request.user)
+                            logger.info(f"Updated experience: {serializer.data}")
+                        else:
+                            logger.info(f"Error updating experience {experience_id}: {serializer.errors}")
+                    except Experiences.DoesNotExist:
+                        logger.info(f"Experience with id {experience_id} not found for user {request.user}. Skipping.")
+                else:
+                    serializer = ExperiencesSerializer(data=experience_data)
+                    if serializer.is_valid():
+                        new_experience = serializer.save(user=request.user)
+                        updated_experiences.append(ExperiencesSerializer(new_experience).data)
+                        logger.info(f"Created new experience: {serializer.data}")
+                    else:
+                        logger.error(f"Error creating new experience: {serializer.errors}")
+            return Response(updated_experiences, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error while saving experiences: {e}")
+            return Response(
+                {"detail": "Internal Server Error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
+class TeamMembersInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @csrf_exempt
+    def get(self, request):
+        user = request.user
+        try:
+            user_department = user.company_info.department
+            logger.info(f"successfully fetch user department: {user_department}")
+        except AttributeError:
+            return Response({"error": "User does not belong to a department."}, status=400)
+        
+        team_members = CompanyInfo.objects.filter(department=user_department).select_related('user','user__personal_info')
+        serializer = TeamMembersSerializer([info.user for info in team_members], many=True)
+        logger.info(f"Serializer data for team members: {serializer.data}")
+        return Response(serializer.data)
+
+class UserListView(APIView):
+    """
+    View to list all users (Only accessible to superusers).
+    """
+    permission_classes = [IsAuthenticated]  # Require authentication
+    
+    def get(self, request, *args, **kwargs):
+        # Check if the user is a superuser
+        if not request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to view this resource.")
+        
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+class UserDetailView(APIView):
+    """
+    View to get, update user roles and details (Only accessible to superusers).
+    """
+    permission_classes = [IsAuthenticated]  # Require authentication
+    
+    def get(self, request, pk, *args, **kwargs):
+        # Check if the user is a superuser
+        if not request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to view this resource.")
+        
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, pk, *args, **kwargs):
+        """
+        Allows superuser to update the role of a user
+        """
+        # Check if the user is a superuser
+        if not request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to perform this action.")
+
+        try:
+            user = CustomUser.objects.get(pk=pk)
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RoleUpdateSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            user = serializer.save()  # Save the updated role
+            return Response({"detail": "Role updated successfully."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

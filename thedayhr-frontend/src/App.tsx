@@ -1,20 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from './pages/LoginPage';
+import LoginPage from './components/UserManagementComponent/LoginPage';
 import logo from './logo.svg';
 import './App.css';
-import Layout from './pages/LayOut';
-import SignupPage from './pages/SignUpPage';
-import VerifyEmailPage from './pages/VerifyEmailPage';
-import DashboardPage from './pages/DashboardPage';
-import { UserProvider } from './pages/UserContext';
-import UserProfile from './pages/UserProfile';
-import ProfileSection from './pages/UserProfileNew';
-import HRMSDashboard from './pages/UserProfileFinal';
-import ReportsAnalytics from './pages/Reports&Analytics';
-import Payroll from './pages/Payroll';
-import LeaveManagement from './pages/LeaveManagement';
-import Attendance from './pages/Attendance';
+import Layout from './components/MainComponent/LayOut';
+import SignupPage from './components/UserManagementComponent/SignUpPage';
+import VerifyEmailPage from './components/UserManagementComponent/VerifyEmailPage';
+import DashboardPage from './components/MainComponent/DashboardPage';
+import { UserProvider } from './components/UserManagementComponent/UserContext';
+import HRMSDashboard from './components/UserManagementComponent/UserProfileFinal';
+import ReportsAnalytics from './components/Reports&Analytics';
+import Payroll from './components/Payroll';
+import LeaveManagement from './components/LeaveManagement';
+import Attendance from './components/AttendanceComponent/Attendance';
 
 function App() {
   return (

@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode"
-import apiClient from "../api/axiosInstance";
+import apiClient from "../../api/axiosInstance";
 
 // Define the types for user data
 interface UserContextType {
   email: string | null;
   message: string | null;
-  setUserData: (email: string, message: string) => void;
+  issuperuser: boolean | null;
+  setUserData: (email: string, issuperuser: boolean, message: string) => void;
   logout: () => void;
 }
 // Define the props type for UserProvider
@@ -20,12 +21,18 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 // User Context Provider
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [email, setEmail] = useState<string | null>(null);
+  const [issuperuser, setIssuperuser] = useState<boolean | null>(
+    localStorage.getItem("issuperuser") === "true"
+  );
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const setUserData = (email: string, message: string) => {
+  const setUserData = (email: string, issuperuser:boolean, message: string) => {
     setEmail(email);
+    setIssuperuser(issuperuser);
     setMessage(message);
+
+    localStorage.setItem("issuperuser", String(issuperuser))
   };
 
   const logout = async () => {
@@ -37,6 +44,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (response.status == 200) {
         setEmail(null);
         setMessage(null);
+        setIssuperuser(null);
+        localStorage.clear();
         navigate("/login");
       } else {
         console.error("Failed to log out. Please try again.");
@@ -47,7 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ email, message, setUserData, logout }}>
+    <UserContext.Provider value={{ email, message, issuperuser, setUserData, logout }}>
       {children}
     </UserContext.Provider>
   );

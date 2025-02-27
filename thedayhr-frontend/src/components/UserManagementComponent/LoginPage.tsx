@@ -2,7 +2,7 @@ import { Loader2, Mail, Lock, LogIn, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "./UserContext";
-import apiClient from "../api/axiosInstance";
+import apiClient from "../../api/axiosInstance";
 
 interface TouchedState {
   email: boolean;
@@ -60,7 +60,7 @@ export default function LoginPage() {
     // console.log('data: ',data)
     if (response.status == 200) {
       const data = response.data;
-      setUserData(data.useremail, data.message);
+      setUserData(data.useremail, data.is_superuser, data.message);
       navigate("/");
     } else {
       // Handle API errors

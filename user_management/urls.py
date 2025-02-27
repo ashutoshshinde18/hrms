@@ -18,4 +18,8 @@ urlpatterns = [
     path("api/profile/professionalSummaryInfo/", views.ProfessionalSummaryInfoView.as_view(), name="professional_summary"),
     path("api/profile/financialDetailsInfo/", views.FinancialIdentityDetailsInfoView.as_view(), name="financial_identity_details"),
     path("api/profile/achievementsInfo/", views.AchievementsInfoView.as_view(), name="achievements"),
+    path("api/profile/experiencesInfo/", views.ExperiencesInfoView.as_view(), name="experiences"),
+    path("api/profile/teamMembersInfo/", views.TeamMembersInfoView.as_view(), name="team_members"),
+    path('api/users/', views.UserListView.as_view(), name='user-list'),  # List all users
+    path('api/users/<int:pk>/', views.UserDetailView.as_view(), name='user-detail'),
 ]

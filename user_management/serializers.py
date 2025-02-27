@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements
+from .models import CustomUser, PersonalInfo, ContactInfo, CompanyInfo, ProfessionalSummaryInfo, FinancialIdentityDetailsInfo, Achievements, Experiences
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password']
+        fields = ['id', 'username', 'email', 'password', 'role']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -26,7 +26,7 @@ class ContactInfoSerializer(serializers.ModelSerializer):
 class CompanyInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyInfo
-        fields = ['id', 'user', 'department', 'joining_date', 'reports_to']
+        fields = ['id', 'user', 'department', 'role', 'joining_date', 'reports_to']
         read_only_fields = ['user']
 
 class ProfessionalSummaryInfoSerializer(serializers.ModelSerializer):
@@ -46,3 +46,28 @@ class AchievementsSerializer(serializers.ModelSerializer):
         model = Achievements
         fields = ['id', 'user', 'title', 'date_awarded']
         read_only_fields = ['user']
+
+class ExperiencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experiences
+        fields = ['id', 'user', 'role', 'company', 'period', 'location']
+        read_only_fields = ['user']
+
+class TeamMembersSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source='personal_info.full_name')
+    role = serializers.CharField(source='company_info.role')
+    profile_picture = serializers.ImageField()
+
+    class Meta:
+        model = CustomUser
+        fields = ['full_name', 'role', 'profile_picture']
+
+class RoleUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('role',)
+
+    def update(self, instance, validated_data):
+        instance.role = validated_data.get('role', instance.role)
+        instance.save()
+        return instance

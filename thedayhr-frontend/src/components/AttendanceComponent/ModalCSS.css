@@ -1,0 +1,57 @@
+/* src/components/RegularizationModal.css */
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end; /* Align to the right */
+  align-items: center; /* Center vertically */
+  z-index: 9999;
+  opacity: 0;
+  transform: translateX(100%); /* Initially off-screen */
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+}
+
+.modal-container.open {
+  opacity: 1;
+  transform: translateX(0); /* Slide in from the right */
+}
+
+.modal-content {
+  background-color: white;
+  width: 300px; /* Adjust the width */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d1d5db; /* Light border */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  gap: 12px; /* Space between elements */
+}
+
+.modal-content h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-content p {
+  font-size: 1rem;
+}
+
+.modal-content button {
+  align-self: flex-start; /* Align button to the left */
+  padding: 8px 12px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #2563eb;
+}
